@@ -3,9 +3,7 @@ from .models import Logs
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from .serializers import LogsSerializer
-from rest_framework.renderers import TemplateHTMLRenderer
 from django.shortcuts import render
-from rest_framework.decorators import action
 from .forms import LogForms
 
 
@@ -17,9 +15,9 @@ def create_logs(request, *args, **kwargs):
         client_ip = x_forwarded_for.split(',')[0] if x_forwarded_for else request.META['REMOTE_ADDR']
         new_form = LogForms()
         if request.method == "POST":
-            print("\n\t POST: ", request.POST)
-            # print("\n\t operation: ", request.POST['operation'])
-            print("\n\t body: ", request.body)
+            # print("\n\t POST: ", request.POST)
+            # # print("\n\t operation: ", request.POST['operation'])
+            # print("\n\t body: ", request.body)
             new_form_entry = LogForms(request.POST)
             if new_form_entry.is_valid():
                 data = {"operation": f"Created a new log operation: {request.POST['operation']}", "user_type": "Client", "ip_address": client_ip}
@@ -45,7 +43,7 @@ def get_logs(request, *args, **kwargs):
             data = {"operation": ops.operation, "address": ops.ip_address, "date": ops.date_created}
             arr.append(data)
             if index == 20: break
-        print("\n\t arr: ", arr)
+        # print("\n\t arr: ", arr)
         # ==================================== ========================================= #
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
         client_ip = x_forwarded_for.split(',')[0] if x_forwarded_for else request.META['REMOTE_ADDR']
