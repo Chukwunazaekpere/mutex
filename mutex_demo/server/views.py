@@ -6,36 +6,32 @@ from .serializers import LogsSerializer
 from rest_framework.renderers import TemplateHTMLRenderer
 from django.shortcuts import render
 from rest_framework.decorators import action
-import json
-
-class TransactionsTemplateHTMLRender(TemplateHTMLRenderer):
-    def get_template_context(self, data, renderer_context):
-        data = super().get_template_context(data, renderer_context)
-        if not data:
-            return {}
-        else:
-            return data
-        
-
-# class LogsViewSet(viewsets.ModelViewSet):
-#     queryset = Logs.objects.all()
-#     serializer_class = LogsSerializer
-#     renderer_classes = [TemplateHTMLRenderer]
+from .forms import LogForms
 
 
 def create_logs(request, *args, **kwargs):
     try:
-        template_name = 'index.html'
+        template_name = 'create-log.html'
         serializer_class = LogsSerializer
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
         client_ip = x_forwarded_for.split(',')[0] if x_forwarded_for else request.META['REMOTE_ADDR']
-        data = {"operation": "Created a new log", "user_type": "Client", "ip_address": client_ip}
-        serializer = serializer_class(data=data)
-        if serializer.is_valid():
-            serializer.save()
-        return render(context={}, template_name=template_name, content_type="application/json", request=request, status=status.HTTP_200_OK)
+        new_form = LogForms()
+        if request.method == "POST":
+            print("\n\t POST: ", request.POST)
+            # print("\n\t operation: ", request.POST['operation'])
+            print("\n\t body: ", request.body)
+            new_form_entry = LogForms(request.POST)
+            if new_form_entry.is_valid():
+                data = {"operation": f"Created a new log operation: {request.POST['operation']}", "user_type": "Client", "ip_address": client_ip}
+                new_form_entry.save()
+        else:
+            data = {"operation": "Entering a new log", "user_type": "Client", "ip_address": client_ip}
+            serializer = serializer_class(data=data)
+            if serializer.is_valid():
+                serializer.save()
+        return render(context={"form": new_form}, template_name=template_name, request=request, status=status.HTTP_200_OK)
     except Exception as error:
-        return render(context={error}, request=request, content_type="application/json", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return render(context={error}, request=request, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 

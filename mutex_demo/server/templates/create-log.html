@@ -70,10 +70,9 @@
           <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center" data-aos="zoom-out">
             <h1>Multicore Programming</h1>
             <p>Experimenting the concepts of multithreading </p>
-            <p>This interface helps to implement the mutex feature of multithreading</p>
+            <p>Create a Custom Log</p>
             <div class="d-flex">
               <a href="{% url 'server:get-logs' %}" class="btn-get-started mx-2">Check Your Logs</a>
-              <a href="{% url 'server:create-log' %}" class="btn btn-get-started btn-secondary">Create Log</a>
             </div>
           </div>
           <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-out" data-aos-delay="200">
@@ -96,8 +95,8 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Log Report</h2>
-        <p>See your Log-reports here...</p>
+        <h2>Log Creation</h2>
+        <p>New Log Entry</p>
       </div><!-- End Section Title -->
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -107,28 +106,17 @@
           <div style="justify-content: center; align-items: center;" class="col-lg-10">
 
             <div class="info-wrap">
-              {% if arr %}
-                <table class="table table-striped">
-                  <thead>
-                    <tr>
-                      <th colspan="3">S/N</th>
-                      <th colspan="3">Opearation</th>
-                      <th colspan="3">IP</th>
-                      <th colspan="3">Timestamp</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for ar in arr %}
-                      <tr>
-                        <td colspan="3">{{forloop.counter}}.</td>
-                        <td colspan="3">{{ar.operation}}</td>
-                        <td colspan="3">{{ar.address}}</td>
-                        <td colspan="3">{{ar.date}}</td>
-                      </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              {% endif %}
+              <form method="post" action="{% url 'server:create-log' %}">
+                {% csrf_token  %}
+                  {% for field in form %}
+                    <div class="form-group">
+                      <label for="operationInput">{{field.label_tag}}</label>
+                      {{field}}
+                     </div>
+                  {% endfor %}
+                  <button type="submit" class="btn btn-primary mt-2 row">Submit</button>
+                {% csrf_token  %}
+                </form>
             </div>
           </div>
 
@@ -149,10 +137,6 @@
     <div class="container copyright text-center mt-4">
       <p>© <span>Copyright</span> <strong class="px-1 sitename">Chukwunazaekpere Obioma</strong> <span>All Rights Reserved</span></p>
       <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you've purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
         Design insights from <a href="https://bootstrapmade.com/">BootstrapMade</a>
       </div>
     </div>

@@ -9,6 +9,7 @@ urlpatterns = [
     path('get-logs/', views.get_logs, name="get-logs"),
     path('', views.home, name="home"),
     path('home/', views.home, name="home"),
+    path('create-log/', views.create_logs, name="create-log"),
     # path('home/', views.get_logs, name="get-logs"),
     # path('home', include(logs_router.urls)),
 ]
